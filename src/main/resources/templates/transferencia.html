@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Transferir')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('transferir')}"></aside>
+    <main class="contenido">
+        <h1>Transferir dinero</h1>
+        <p class="subtitulo">Envía dinero a otra cuenta del banco al instante.</p>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <form class="panel una-columna" th:action="@{/cliente/transferencia}" method="post">
+            <div class="campo">
+                <label for="origen">Desde</label>
+                <select id="origen" name="origen" required>
+                    <option th:each="c : ${cuentas}" th:value="${c.numeroCuenta}"
+                            th:text="${c.numeroCuenta + ' · ' + #strings.capitalize(#strings.toLowerCase(c.tipo)) + ' · S/ ' + #numbers.formatDecimal(c.saldo, 1, 'COMMA', 2, 'POINT')}"></option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="destino">Número de cuenta destino</label>
+                <input id="destino" name="destino" placeholder="001-0000003" required>
+                <div class="ayuda">Solo cuentas del mismo banco.</div>
+            </div>
+            <div class="campo">
+                <label for="monto">Monto (S/)</label>
+                <input id="monto" name="monto" type="number" step="0.01" min="0.01" required>
+            </div>
+            <button class="boton" type="submit">Transferir</button>
+        </form>
+    </main>
+</div>
+</body>
+</html>

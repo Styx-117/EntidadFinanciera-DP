@@ -1,0 +1,232 @@
+/* Banca Digital – estilos propios (sin Bootstrap)
+   Paleta: tinta verde-azulada, papel gris claro, oro para destacar importes. */
+:root {
+  --tinta: #0e3b3a;
+  --tinta-2: #17504e;
+  --tinta-3: #2a6d6a;
+  --papel: #f2f4f1;
+  --blanco: #ffffff;
+  --linea: #d9dfda;
+  --texto: #16231f;
+  --suave: #5b6b66;
+  --oro: #e9b02e;
+  --ingreso: #1b7f4b;
+  --egreso: #b3382c;
+  --radio: 6px;
+  --fuente-titulo: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --fuente-texto: "Figtree", "Segoe UI", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--texto);
+  font-family: var(--fuente-texto);
+  line-height: 1.5;
+}
+h1, h2, h3 { font-family: var(--fuente-titulo); line-height: 1.15; margin: 0; }
+a { color: var(--tinta-2); }
+:focus-visible { outline: 3px solid var(--oro); outline-offset: 2px; }
+
+/* ---------- estructura con barra lateral ---------- */
+.app { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+
+.lateral {
+  background: var(--tinta);
+  color: #fff;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.marca {
+  font-family: var(--fuente-titulo);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: #fff;
+}
+.marca span { color: var(--oro); }
+.menu { display: flex; flex-direction: column; gap: 2px; }
+.menu a {
+  color: #cfe0dd;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: var(--radio);
+  border-left: 3px solid transparent;
+  transition: background .15s;
+}
+.menu a:hover { background: var(--tinta-2); color: #fff; }
+.menu a.activo {
+  background: var(--tinta-2);
+  color: #fff;
+  border-left-color: var(--oro);
+  font-weight: 600;
+}
+.usuario {
+  margin-top: auto;
+  border-top: 1px solid var(--tinta-3);
+  padding-top: 16px;
+  font-size: .92rem;
+}
+.usuario .nombre { display: block; color: #fff; font-weight: 600; margin-bottom: 8px; }
+.btn-salir {
+  background: transparent;
+  color: #cfe0dd;
+  border: 1px solid var(--tinta-3);
+  border-radius: var(--radio);
+  padding: 6px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+.btn-salir:hover { background: var(--tinta-2); color: #fff; }
+
+.contenido { padding: 40px 48px 64px; max-width: 980px; width: 100%; }
+.contenido h1 { font-size: 2rem; font-weight: 700; margin-bottom: 4px; }
+.subtitulo { color: var(--suave); margin: 0 0 28px; }
+
+/* ---------- avisos ---------- */
+.aviso {
+  padding: 12px 16px;
+  border-radius: var(--radio);
+  border-left: 4px solid;
+  margin-bottom: 20px;
+  background: var(--blanco);
+}
+.aviso.ok { border-color: var(--ingreso); }
+.aviso.error { border-color: var(--egreso); }
+
+/* ---------- cuentas ---------- */
+.cuentas { display: flex; flex-direction: column; gap: 14px; }
+.cuenta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 16px;
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+  border-left: 8px solid var(--tinta-3);
+  padding: 22px 26px;
+}
+.cuenta.t-AHORRO { border-left-color: var(--oro); }
+.cuenta.t-CORRIENTE { border-left-color: var(--tinta-3); }
+.cuenta .tipo { font-weight: 600; }
+.cuenta .numero { color: var(--suave); font-variant-numeric: tabular-nums; }
+.cuenta .estado-cuenta { font-size: .85rem; color: var(--ingreso); }
+.cuenta .saldo { text-align: right; }
+.saldo-etiqueta { display: block; font-size: .85rem; color: var(--suave); }
+.saldo-valor {
+  font-family: var(--fuente-titulo);
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.saldo-valor small { font-size: 1rem; font-weight: 500; margin-right: 4px; color: var(--suave); }
+.cuenta .enlace { grid-column: 1 / -1; font-size: .92rem; }
+
+/* ---------- formularios ---------- */
+.panel { background: var(--blanco); border: 1px solid var(--linea); padding: 28px; }
+.panel h2 { font-size: 1.15rem; margin-bottom: 18px; }
+.campo { margin-bottom: 18px; }
+.campo label { display: block; font-weight: 600; margin-bottom: 6px; }
+.campo input, .campo select {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid #b8c4be;
+  border-radius: var(--radio);
+  background: #fff;
+  color: var(--texto);
+}
+.campo input:focus, .campo select:focus { border-color: var(--tinta-2); }
+.ayuda { color: var(--suave); font-size: .88rem; margin-top: 4px; }
+.boton {
+  display: inline-block;
+  background: var(--tinta);
+  color: #fff;
+  border: 0;
+  border-radius: var(--radio);
+  padding: 11px 22px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.boton:hover { background: var(--tinta-2); }
+.boton.ancho { width: 100%; }
+.dos-columnas { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: start; }
+.una-columna { max-width: 520px; }
+
+/* ---------- tablas ---------- */
+.tabla-caja { background: var(--blanco); border: 1px solid var(--linea); overflow-x: auto; }
+table.tabla { width: 100%; border-collapse: collapse; }
+.tabla th {
+  text-align: left;
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--suave);
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--linea);
+  white-space: nowrap;
+}
+.tabla td { padding: 12px 16px; border-bottom: 1px solid var(--linea); }
+.tabla tr:last-child td { border-bottom: 0; }
+.tabla .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.monto-ingreso { color: var(--ingreso); font-weight: 600; }
+.monto-egreso { color: var(--egreso); font-weight: 600; }
+.vacio { text-align: center; color: var(--suave); padding: 32px 16px !important; }
+
+.estado {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-size: .85rem;
+  font-weight: 600;
+  background: #e8ecea;
+}
+.estado-SOLICITADO, .estado-EN_EVALUACION { background: #fbefc9; color: #6d4f00; }
+.estado-APROBADO, .estado-DESEMBOLSADO { background: #d6efe0; color: #14573a; }
+.estado-RECHAZADO { background: #f6d9d5; color: #7c241b; }
+
+/* ---------- inicio de sesión ---------- */
+.login { display: grid; grid-template-columns: 1.1fr 1fr; min-height: 100vh; }
+.login-lado {
+  background: var(--tinta);
+  color: #fff;
+  padding: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.login-lado h1 { font-size: 3.2rem; font-weight: 800; letter-spacing: -0.03em; max-width: 11ch; }
+.login-lado p { color: #cfe0dd; max-width: 38ch; font-size: 1.1rem; margin: 18px 0 0; }
+.login-lado .pie { color: var(--tinta-3); font-size: .9rem; }
+.login-form-lado { display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.login-form { width: 100%; max-width: 360px; }
+.login-form h2 { font-size: 1.6rem; margin-bottom: 6px; }
+.login-form .ayuda { margin: 18px 0 0; }
+
+/* ---------- pantallas angostas ---------- */
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  .lateral { position: static; height: auto; padding: 16px; gap: 14px; }
+  .menu { flex-direction: row; overflow-x: auto; }
+  .menu a { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; }
+  .menu a.activo { border-bottom-color: var(--oro); }
+  .usuario { margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
+  .usuario .nombre { margin: 0; }
+  .contenido { padding: 24px 16px 48px; }
+  .dos-columnas { grid-template-columns: 1fr; }
+  .cuenta { grid-template-columns: 1fr; }
+  .cuenta .saldo { text-align: left; }
+  .login { grid-template-columns: 1fr; }
+  .login-lado { padding: 32px 24px; gap: 32px; }
+  .login-lado h1 { font-size: 2.2rem; }
+}

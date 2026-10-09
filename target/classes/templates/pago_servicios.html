@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Pagar servicios')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('pagos')}"></aside>
+    <main class="contenido">
+        <h1>Pagar servicios</h1>
+        <p class="subtitulo">Paga luz, agua, teléfono o internet sin ir a una agencia.</p>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <form class="panel una-columna" th:action="@{/cliente/pagos}" method="post">
+            <div class="campo">
+                <label for="servicio">Servicio</label>
+                <select id="servicio" name="servicio" required>
+                    <option th:each="s : ${servicios}" th:value="${s}" th:text="${s}">Luz</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="codigo">Código de suministro</label>
+                <input id="codigo" name="codigo" inputmode="numeric" pattern="\d{4,12}" required>
+                <div class="ayuda">Entre 4 y 12 dígitos. Lo encuentras en tu recibo.</div>
+            </div>
+            <div class="campo">
+                <label for="monto">Monto a pagar (S/)</label>
+                <input id="monto" name="monto" type="number" step="0.01" min="0.01" required>
+            </div>
+            <div class="campo">
+                <label for="origen">Pagar desde</label>
+                <select id="origen" name="origen" required>
+                    <option th:each="c : ${cuentas}" th:value="${c.numeroCuenta}"
+                            th:text="${c.numeroCuenta + ' · ' + #strings.capitalize(#strings.toLowerCase(c.tipo)) + ' · S/ ' + #numbers.formatDecimal(c.saldo, 1, 'COMMA', 2, 'POINT')}"></option>
+                </select>
+            </div>
+            <button class="boton" type="submit">Pagar servicio</button>
+        </form>
+    </main>
+</div>
+</body>
+</html>

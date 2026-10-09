@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Movimientos')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('movimientos')}"></aside>
+    <main class="contenido">
+        <h1>Movimientos</h1>
+        <p class="subtitulo">Tus últimas 50 operaciones, de la más reciente a la más antigua.</p>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <form class="campo una-columna" th:action="@{/cliente/movimientos}" method="get">
+            <label for="cuenta">Cuenta</label>
+            <select id="cuenta" name="cuenta" onchange="this.form.submit()">
+                <option th:each="c : ${cuentas}" th:value="${c.numeroCuenta}"
+                        th:selected="${c.numeroCuenta == seleccionada}"
+                        th:text="${c.numeroCuenta + ' · ' + #strings.capitalize(#strings.toLowerCase(c.tipo))}">001-0000001</option>
+            </select>
+        </form>
+
+        <div class="tabla-caja">
+            <table class="tabla">
+                <thead>
+                <tr><th>Fecha</th><th>Operación</th><th>Detalle</th><th class="num">Monto (S/)</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="m : ${movimientos}">
+                    <td th:text="${#temporals.format(m.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(m.tipo, '_', ' ')))}">Deposito</td>
+                    <td th:text="${m.descripcion}">Detalle</td>
+                    <td class="num">
+                        <span th:if="${m.ingreso}" class="monto-ingreso"
+                              th:text="'+ ' + ${#numbers.formatDecimal(m.monto, 1, 'COMMA', 2, 'POINT')}">+ 0.00</span>
+                        <span th:unless="${m.ingreso}" class="monto-egreso"
+                              th:text="'− ' + ${#numbers.formatDecimal(m.monto, 1, 'COMMA', 2, 'POINT')}">− 0.00</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(movimientos)}">
+                    <td colspan="4" class="vacio">Esta cuenta aún no tiene movimientos.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

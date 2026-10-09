@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Mis cuentas')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('cuentas')}"></aside>
+    <main class="contenido">
+        <h1>Mis cuentas</h1>
+        <p class="subtitulo">Saldo disponible en cada una de tus cuentas.</p>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <p class="vacio" th:if="${#lists.isEmpty(cuentas)}">Todavía no tienes cuentas. Acércate a una agencia para abrir una.</p>
+
+        <div class="cuentas">
+            <article class="cuenta" th:each="c : ${cuentas}" th:classappend="'t-' + ${c.tipo}">
+                <div>
+                    <div class="tipo" th:text="'Cuenta de ' + ${#strings.toLowerCase(c.tipo)}">Cuenta de ahorro</div>
+                    <div class="numero" th:text="${c.numeroCuenta}">001-0000001</div>
+                    <div class="estado-cuenta" th:text="${#strings.capitalize(#strings.toLowerCase(c.estado))}">Activa</div>
+                </div>
+                <div class="saldo">
+                    <span class="saldo-etiqueta">Saldo disponible</span>
+                    <span class="saldo-valor"><small>S/</small><span th:text="${#numbers.formatDecimal(c.saldo, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                </div>
+                <a class="enlace" th:href="@{/cliente/movimientos(cuenta=${c.numeroCuenta})}">Ver movimientos de esta cuenta</a>
+            </article>
+        </div>
+    </main>
+</div>
+</body>
+</html>

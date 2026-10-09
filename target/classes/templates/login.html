@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Iniciar sesión')}"></head>
+<body>
+<div class="login">
+    <section class="login-lado">
+        <span class="marca">Banca<span>Digital</span></span>
+        <div>
+            <h1>Sin colas ni ventanilla.</h1>
+            <p>Consulta tus saldos, transfiere dinero y paga tus servicios desde donde estés.</p>
+        </div>
+    </section>
+    <section class="login-form-lado">
+        <form class="login-form" th:action="@{/login}" method="post">
+            <h2>Ingresa a tu cuenta</h2>
+            <p class="subtitulo">Usa el usuario que te dio el banco.</p>
+            <div class="aviso error" th:if="${error}" th:text="${error}"></div>
+            <div class="campo">
+                <label for="username">Usuario</label>
+                <input id="username" name="username" autocomplete="username" required autofocus>
+            </div>
+            <div class="campo">
+                <label for="password">Contraseña</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+            </div>
+            <button class="boton ancho" type="submit">Ingresar</button>
+            <p class="ayuda">Prueba: cliente1 / 1234</p>
+        </form>
+    </section>
+</div>
+</body>
+</html>

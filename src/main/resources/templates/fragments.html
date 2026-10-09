@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' | Banca Digital'">Banca Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/banca.css}">
+</head>
+<body>
+<aside th:fragment="lateral(activo)" class="lateral">
+    <a class="marca" th:href="@{/cliente/dashboard}">Banca<span>Digital</span></a>
+    <nav class="menu">
+        <a th:href="@{/cliente/dashboard}" th:classappend="${activo == 'cuentas'} ? 'activo'">Mis cuentas</a>
+        <a th:href="@{/cliente/movimientos}" th:classappend="${activo == 'movimientos'} ? 'activo'">Movimientos</a>
+        <a th:href="@{/cliente/transferencia}" th:classappend="${activo == 'transferir'} ? 'activo'">Transferir</a>
+        <a th:href="@{/cliente/pagos}" th:classappend="${activo == 'pagos'} ? 'activo'">Pagar servicios</a>
+        <a th:href="@{/cliente/credito}" th:classappend="${activo == 'credito'} ? 'activo'">Pedir un crédito</a>
+    </nav>
+    <div class="usuario">
+        <span class="nombre" th:text="${session.usuario}">Cliente</span>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-salir" type="submit">Cerrar sesión</button>
+        </form>
+    </div>
+</aside>
+<div th:fragment="mensajes">
+    <div class="aviso ok" th:if="${ok}" th:text="${ok}"></div>
+    <div class="aviso error" th:if="${error}" th:text="${error}"></div>
+</div>
+</body>
+</html>
