@@ -1,8 +1,6 @@
 package banca.model;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 public class Movimiento {
     private int idMovimiento;
     private int idCuenta;
@@ -10,22 +8,17 @@ public class Movimiento {
     private BigDecimal monto;
     private String descripcion;
     private LocalDateTime fecha;
-
     public Movimiento() { }
-
     public Movimiento(int idCuenta, String tipo, BigDecimal monto, String descripcion) {
         this.idCuenta = idCuenta;
         this.tipo = tipo;
         this.monto = monto;
         this.descripcion = descripcion;
     }
-
-    /** GRASP Experto: el movimiento sabe si suma o resta saldo a su cuenta. */
     public boolean isIngreso() {
         return "DEPOSITO".equals(tipo)
                 || (descripcion != null && descripcion.startsWith("Transferencia recibida"));
     }
-
     public int getIdMovimiento() { return idMovimiento; }
     public void setIdMovimiento(int idMovimiento) { this.idMovimiento = idMovimiento; }
     public int getIdCuenta() { return idCuenta; }

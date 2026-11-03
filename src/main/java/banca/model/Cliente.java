@@ -1,5 +1,4 @@
 package banca.model;
-
 public class Cliente {
     private int idCliente;
     private int idUsuario;
@@ -19,9 +18,7 @@ public class Cliente {
         this.email = email;
         this.telefono = telefono;
     }
-
     public String getNombreCompleto() { return nombres + " " + apellidos; }
-
     public int getIdCliente() { return idCliente; }
     public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
     public int getIdUsuario() { return idUsuario; }

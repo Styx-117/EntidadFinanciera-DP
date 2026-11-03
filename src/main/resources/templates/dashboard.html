@@ -8,9 +8,7 @@
         <h1>Mis cuentas</h1>
         <p class="subtitulo">Saldo disponible en cada una de tus cuentas.</p>
         <div th:replace="~{fragments :: mensajes}"></div>
-
         <p class="vacio" th:if="${#lists.isEmpty(cuentas)}">Todavía no tienes cuentas. Acércate a una agencia para abrir una.</p>
-
         <div class="cuentas">
             <article class="cuenta" th:each="c : ${cuentas}" th:classappend="'t-' + ${c.tipo}">
                 <div>

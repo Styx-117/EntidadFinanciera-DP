@@ -1,5 +1,4 @@
 package banca.service;
-
 import banca.dao.ClienteDAO;
 import banca.dao.UsuarioDAO;
 import banca.dao.factory.DAOFactory;
@@ -7,22 +6,16 @@ import banca.model.Cliente;
 import banca.model.Usuario;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-/** Funcionalidad 1: inicio de sesión con contraseña cifrada (BCrypt) y bloqueo tras 3 intentos. */
 @Service
 public class AuthService {
-
     public static final int MAX_INTENTOS = 3;
     private static final String MSG_CREDENCIALES = "Usuario o contraseña incorrectos";
-
     private final UsuarioDAO usuarioDAO = DAOFactory.getUsuarioDAO();
     private final ClienteDAO clienteDAO = DAOFactory.getClienteDAO();
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     public String encriptar(String clave) {
         return encoder.encode(clave);
     }
-
     public Cliente iniciarSesion(String username, String password) {
         if (username == null || username.isBlank() || password == null || password.isEmpty()) {
             throw new NegocioException("Ingrese usuario y contraseña");

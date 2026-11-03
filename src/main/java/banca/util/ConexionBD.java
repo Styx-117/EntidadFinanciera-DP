@@ -7,13 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/**
- * PATRÓN SINGLETON (creacional).
- * Una única instancia centraliza la configuración y el acceso a la base de datos.
- * - getConexion(): conexión compartida para consultas simples.
- * - nuevaConexion(): conexión dedicada para transacciones (transferencias, pagos),
- *   así el commit/rollback de una operación no afecta a otras peticiones web.
- */
 public final class ConexionBD {
 
     private static volatile ConexionBD instancia;
@@ -48,14 +41,12 @@ public final class ConexionBD {
         }
         return instancia;
     }
-
     public synchronized Connection getConexion() throws SQLException {
         if (conexion == null || conexion.isClosed()) {
             conexion = DriverManager.getConnection(url, usuario, clave);
         }
         return conexion;
     }
-
     public Connection nuevaConexion() throws SQLException {
         return DriverManager.getConnection(url, usuario, clave);
     }

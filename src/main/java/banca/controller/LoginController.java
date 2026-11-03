@@ -1,5 +1,4 @@
 package banca.controller;
-
 import banca.model.Cliente;
 import banca.service.AuthService;
 import banca.service.NegocioException;
@@ -10,22 +9,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-/** GRASP CONTROLADOR: recibe las peticiones de login/logout y delega en AuthService. */
 @Controller
 public class LoginController {
-
     private final AuthService authService;
-
     public LoginController(AuthService authService) {
         this.authService = authService;
     }
-
     @GetMapping("/")
     public String raiz() {
         return "redirect:/login";
     }
-
     @GetMapping("/login")
     public String mostrarLogin(HttpSession session) {
         if (session.getAttribute(Sesion.ID_CLIENTE) != null) {
@@ -33,7 +26,6 @@ public class LoginController {
         }
         return "login";
     }
-
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password,
                         HttpSession session, Model model) {
@@ -47,7 +39,6 @@ public class LoginController {
             return "login";
         }
     }
-
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();

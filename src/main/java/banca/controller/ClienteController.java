@@ -1,5 +1,4 @@
 package banca.controller;
-
 import banca.model.Cuenta;
 import banca.service.CreditoService;
 import banca.service.CuentaService;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-/** GRASP CONTROLADOR: saldos, movimientos y solicitud de crédito del cliente. */
 @Controller
 @RequestMapping("/cliente")
 public class ClienteController {

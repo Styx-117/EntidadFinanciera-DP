@@ -1,5 +1,4 @@
 package banca.service;
-
 import banca.dao.CuentaDAO;
 import banca.dao.DAOException;
 import banca.dao.MovimientoDAO;
@@ -13,25 +12,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-
-/**
- * Funcionalidades 4 y 5: transferencias y pago de servicios.
- * Cada operación se ejecuta en UNA transacción JDBC: se actualizan los saldos y se
- * registran los movimientos juntos (commit) o no se guarda nada (rollback).
- */
 @Service
 public class OperacionService {
-
     public static final List<String> SERVICIOS = List.of("Luz", "Agua", "Telefonía", "Internet");
-
     private final CuentaDAO cuentaDAO = DAOFactory.getCuentaDAO();
     private final MovimientoDAO movimientoDAO = DAOFactory.getMovimientoDAO();
-
     @FunctionalInterface
     private interface Operacion {
         void ejecutar(Connection conn) throws SQLException;
     }
-
     public void transferir(int idCliente, String origen, String destino, BigDecimal monto) {
         validarMonto(monto);
         if (origen == null || origen.isBlank() || destino == null || destino.isBlank()) {
@@ -58,7 +47,7 @@ public class OperacionService {
             Cuenta cDestino = optDestino.orElseThrow(() -> new NegocioException("La cuenta destino no existe"));
             verificarPropia(cOrigen, idCliente);
 
-            cOrigen.retirar(monto);       // GRASP Experto: la cuenta valida y calcula
+            cOrigen.retirar(monto);
             cDestino.depositar(monto);
 
             cuentaDAO.actualizarSaldo(conn, cOrigen.getIdCuenta(), cOrigen.getSaldo());
@@ -69,7 +58,6 @@ public class OperacionService {
                     "Transferencia recibida de " + nOrigen));
         });
     }
-
     public void pagarServicio(int idCliente, String origen, String servicio, String codigo, BigDecimal monto) {
         validarMonto(monto);
         if (servicio == null || !SERVICIOS.contains(servicio)) {
@@ -138,7 +126,7 @@ public class OperacionService {
         try {
             if (conn != null) conn.rollback();
         } catch (SQLException ignorada) {
-            // no hay nada más que hacer
+
         }
     }
 
@@ -146,7 +134,7 @@ public class OperacionService {
         try {
             if (conn != null) conn.close();
         } catch (SQLException ignorada) {
-            // no hay nada más que hacer
+
         }
     }
 }

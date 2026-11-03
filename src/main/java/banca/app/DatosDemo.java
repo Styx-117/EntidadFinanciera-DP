@@ -1,5 +1,4 @@
 package banca.app;
-
 import banca.dao.ClienteDAO;
 import banca.dao.CuentaDAO;
 import banca.dao.DAOException;
@@ -14,25 +13,16 @@ import banca.service.AuthService;
 import java.math.BigDecimal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-/**
- * Crea datos de prueba al iniciar (solo si no existen):
- *   cliente1 / 1234  -> cuentas 001-0000001 (ahorro) y 001-0000002 (corriente)
- *   cliente2 / 1234  -> cuenta  001-0000003 (ahorro)   (sirve como destino de transferencias)
- */
 @Component
 public class DatosDemo implements CommandLineRunner {
-
     private final AuthService authService;
     private final UsuarioDAO usuarioDAO = DAOFactory.getUsuarioDAO();
     private final ClienteDAO clienteDAO = DAOFactory.getClienteDAO();
     private final CuentaDAO cuentaDAO = DAOFactory.getCuentaDAO();
     private final MovimientoDAO movimientoDAO = DAOFactory.getMovimientoDAO();
-
     public DatosDemo(AuthService authService) {
         this.authService = authService;
     }
-
     @Override
     public void run(String... args) {
         try {
