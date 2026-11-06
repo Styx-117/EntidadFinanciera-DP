@@ -5,26 +5,36 @@
 <div class="app">
     <aside th:replace="~{fragments :: lateral('credito')}"></aside>
     <main class="contenido">
-        <h1>Pedir un crédito</h1>
-        <p class="subtitulo">Envía tu solicitud y sigue su estado aquí mismo.</p>
+        <header class="encabezado">
+            <div>
+                <h1>Pedir un crédito</h1>
+                <p class="subtitulo">Simula tu cuota, envía la solicitud y sigue su estado aquí mismo.</p>
+            </div>
+        </header>
         <div th:replace="~{fragments :: mensajes}"></div>
 
         <div class="dos-columnas">
-            <form class="panel" th:action="@{/cliente/credito}" method="post">
+            <form class="panel" th:action="@{/cliente/credito}" method="post"
+                  data-confirmar="Vas a enviar una solicitud de crédito por S/ {monto} a {plazo} meses.">
                 <h2>Nueva solicitud</h2>
+                <div class="simulador" id="simulador" th:attr="data-tasa=${tasa}">
+                    <div><span>Cuota mensual aprox.</span><strong><small>S/</small><span id="sim-cuota">0.00</span></strong></div>
+                    <div><span>Total a pagar</span><strong><small>S/</small><span id="sim-total">0.00</span></strong></div>
+                </div>
                 <div class="campo">
                     <label for="monto">Monto (S/)</label>
-                    <input id="monto" name="monto" type="number" min="500" max="100000" step="0.01" required>
+                    <input id="monto" name="monto" type="number" min="500" max="100000" step="0.01" value="5000" required>
+                    <input class="rango" id="rango" type="range" min="500" max="100000" step="100" value="5000" aria-label="Ajustar monto">
                     <div class="ayuda">Entre S/ 500 y S/ 100,000.</div>
                 </div>
                 <div class="campo">
                     <label for="plazo">Plazo</label>
                     <select id="plazo" name="plazo" required>
-                        <option th:each="p : ${plazos}" th:value="${p}" th:text="${p + ' meses'}">12 meses</option>
+                        <option th:each="p : ${plazos}" th:value="${p}" th:text="${p + ' meses'}" th:selected="${p == 12}">12 meses</option>
                     </select>
                     <div class="ayuda">Tasa referencial: <span th:text="${tasa}">18.00</span>% anual.</div>
                 </div>
-                <button class="boton" type="submit">Enviar solicitud</button>
+                <button class="boton" type="submit"><svg class="ico"><use href="#i-credito"/></svg>Enviar solicitud</button>
             </form>
 
             <div>
@@ -35,14 +45,18 @@
                         <tr><th>Fecha</th><th class="num">Monto</th><th>Plazo</th><th class="num">Cuota aprox.</th><th>Estado</th></tr>
                         </thead>
                         <tbody>
-                        <tr th:each="c : ${creditos}">
-                            <td th:text="${#temporals.format(c.fechaSolicitud, 'dd/MM/yyyy')}">01/01/2026</td>
-                            <td class="num" th:text="${#numbers.formatDecimal(c.monto, 1, 'COMMA', 2, 'POINT')}">0.00</td>
-                            <td th:text="${c.plazoMeses + ' meses'}">12 meses</td>
-                            <td class="num" th:text="${#numbers.formatDecimal(c.cuotaMensual(), 1, 'COMMA', 2, 'POINT')}">0.00</td>
-                            <td><span class="estado" th:classappend="'estado-' + ${c.estado}"
-                                      th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(c.estado, '_', ' ')))}">Solicitado</span></td>
-                        </tr>
+                        <th:block th:each="c : ${creditos}">
+                            <tr>
+                                <td th:text="${#temporals.format(c.fechaSolicitud, 'dd/MM/yyyy')}">01/01/2026</td>
+                                <td class="num" th:text="${#numbers.formatDecimal(c.monto, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                                <td th:text="${c.plazoMeses + ' meses'}">12 meses</td>
+                                <td class="num" th:text="${#numbers.formatDecimal(c.cuotaMensual(), 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                                <td><span th:replace="~{fragments :: estado(${c.estado})}"></span></td>
+                            </tr>
+                            <tr th:if="${c.observaciones != null and c.estado != 'SOLICITADO'}">
+                                <td colspan="5"><span class="secundario-texto" th:text="'Comentario del asesor: ' + ${c.observaciones}">Comentario</span></td>
+                            </tr>
+                        </th:block>
                         <tr th:if="${#lists.isEmpty(creditos)}">
                             <td colspan="5" class="vacio">Aún no has enviado ninguna solicitud.</td>
                         </tr>
@@ -53,5 +67,6 @@
         </div>
     </main>
 </div>
+<div th:replace="~{fragments :: dialogo}"></div>
 </body>
 </html>

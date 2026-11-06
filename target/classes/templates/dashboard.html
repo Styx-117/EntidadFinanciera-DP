@@ -5,22 +5,67 @@
 <div class="app">
     <aside th:replace="~{fragments :: lateral('cuentas')}"></aside>
     <main class="contenido">
-        <h1>Mis cuentas</h1>
-        <p class="subtitulo">Saldo disponible en cada una de tus cuentas.</p>
+        <header class="encabezado">
+            <div>
+                <h1 th:text="'Hola, ' + ${#strings.arraySplit(session.usuario, ' ')[0]}">Hola</h1>
+                <p class="subtitulo">Este es el resumen de tus cuentas.</p>
+            </div>
+            <div class="acciones">
+                <a class="boton" th:href="@{/cliente/transferencia}"><svg class="ico"><use href="#i-transferir"/></svg>Transferir</a>
+                <a class="boton secundario" th:href="@{/cliente/pagos}"><svg class="ico"><use href="#i-pagos"/></svg>Pagar servicios</a>
+            </div>
+        </header>
         <div th:replace="~{fragments :: mensajes}"></div>
+
+        <section class="resumen">
+            <div>
+                <span class="resumen-etiqueta">Saldo total</span>
+                <span class="resumen-valor"><small>S/</small><span th:attr="data-contar=${saldoTotal}" th:text="${#numbers.formatDecimal(saldoTotal, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+            </div>
+            <div class="resumen-lado">
+                <strong th:text="${#lists.size(cuentas)}">0</strong>
+                <span th:text="${#lists.size(cuentas) == 1} ? 'cuenta activa' : 'cuentas activas'">cuentas activas</span>
+            </div>
+        </section>
+
+        <section class="notas" th:if="${!#lists.isEmpty(notificaciones)}">
+            <div class="notas-cab">
+                <h2><svg class="ico"><use href="#i-campana"/></svg>Novedades</h2>
+                <form th:action="@{/cliente/notificaciones/leer}" method="post">
+                    <button class="boton secundario chico" type="submit">Marcar como leídas</button>
+                </form>
+            </div>
+            <ul>
+                <li th:each="n : ${notificaciones}">
+                    <span th:text="${n.mensaje}">Mensaje</span>
+                    <time th:text="${#temporals.format(n.fecha, 'dd/MM HH:mm')}">01/01 10:00</time>
+                </li>
+            </ul>
+        </section>
+
         <p class="vacio" th:if="${#lists.isEmpty(cuentas)}">Todavía no tienes cuentas. Acércate a una agencia para abrir una.</p>
-        <div class="cuentas">
-            <article class="cuenta" th:each="c : ${cuentas}" th:classappend="'t-' + ${c.tipo}">
-                <div>
-                    <div class="tipo" th:text="'Cuenta de ' + ${#strings.toLowerCase(c.tipo)}">Cuenta de ahorro</div>
-                    <div class="numero" th:text="${c.numeroCuenta}">001-0000001</div>
-                    <div class="estado-cuenta" th:text="${#strings.capitalize(#strings.toLowerCase(c.estado))}">Activa</div>
+
+        <div class="tarjetas">
+            <article class="tarjeta" th:each="c : ${cuentas}" th:classappend="'t-' + ${c.tipo}">
+                <div class="tarjeta-cab">
+                    <span class="tarjeta-tipo" th:text="${c.tipo == 'AHORRO'} ? 'Ahorro' : 'Corriente'">Ahorro</span>
+                    <span class="tarjeta-marca">Facil<b>Bank</b></span>
                 </div>
-                <div class="saldo">
-                    <span class="saldo-etiqueta">Saldo disponible</span>
-                    <span class="saldo-valor"><small>S/</small><span th:text="${#numbers.formatDecimal(c.saldo, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                <div class="tarjeta-medio">
+                    <svg class="chip" viewBox="0 0 44 32" aria-hidden="true">
+                        <rect width="44" height="32" rx="6" fill="#e9b02e"/>
+                        <path d="M0 11h14M0 21h14M30 11h14M30 21h14M14 0v32M30 0v32" stroke="#a87a10" stroke-width="1.4" fill="none"/>
+                        <rect x="14" y="9" width="16" height="14" rx="3" fill="none" stroke="#a87a10" stroke-width="1.4"/>
+                    </svg>
+                    <span class="tarjeta-numero" th:text="${c.numeroCuenta}">001-0000001</span>
                 </div>
-                <a class="enlace" th:href="@{/cliente/movimientos(cuenta=${c.numeroCuenta})}">Ver movimientos de esta cuenta</a>
+                <div class="tarjeta-pie">
+                    <div>
+                        <span class="tarjeta-etiqueta">Saldo disponible</span>
+                        <span class="tarjeta-saldo"><small>S/</small><span th:attr="data-contar=${c.saldo}" th:text="${#numbers.formatDecimal(c.saldo, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                    </div>
+                    <a class="tarjeta-enlace" th:href="@{/cliente/movimientos(cuenta=${c.numeroCuenta})}">Movimientos<svg class="ico"><use href="#i-flecha"/></svg></a>
+                </div>
             </article>
         </div>
     </main>

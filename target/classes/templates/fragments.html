@@ -3,26 +3,64 @@
 <head th:fragment="head(titulo)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${titulo} + ' | Banca Digital'">Banca Digital</title>
+    <title th:text="${titulo} + ' | FacilBank'">FacilBank</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/logo.svg}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/banca.css}">
+    <link rel="stylesheet" th:href="@{/css/facilbank.css}">
+    <script defer th:src="@{/js/facilbank.js}"></script>
 </head>
 <body>
 <aside th:fragment="lateral(activo)" class="lateral">
-    <a class="marca" th:href="@{/cliente/dashboard}">Banca<span>Digital</span></a>
-    <nav class="menu">
-        <a th:href="@{/cliente/dashboard}" th:classappend="${activo == 'cuentas'} ? 'activo'">Mis cuentas</a>
-        <a th:href="@{/cliente/movimientos}" th:classappend="${activo == 'movimientos'} ? 'activo'">Movimientos</a>
-        <a th:href="@{/cliente/transferencia}" th:classappend="${activo == 'transferir'} ? 'activo'">Transferir</a>
-        <a th:href="@{/cliente/pagos}" th:classappend="${activo == 'pagos'} ? 'activo'">Pagar servicios</a>
-        <a th:href="@{/cliente/credito}" th:classappend="${activo == 'credito'} ? 'activo'">Pedir un crédito</a>
+    <svg class="sprite" aria-hidden="true" focusable="false">
+        <symbol id="i-cuentas" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-1z"/><circle cx="16" cy="13.5" r="1"/></symbol>
+        <symbol id="i-movimientos" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+        <symbol id="i-transferir" viewBox="0 0 24 24"><path d="M4 8h15l-3-3M20 16H5l3 3"/></symbol>
+        <symbol id="i-pagos" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></symbol>
+        <symbol id="i-credito" viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></symbol>
+        <symbol id="i-pendientes" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+        <symbol id="i-resueltas" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></symbol>
+        <symbol id="i-salir" viewBox="0 0 24 24"><path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4"/><path d="M16 8l4 4-4 4M20 12H9"/></symbol>
+        <symbol id="i-usuario" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></symbol>
+        <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+        <symbol id="i-ingreso" viewBox="0 0 24 24"><path d="M17 7L7 17M7 9v8h8"/></symbol>
+        <symbol id="i-egreso" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
+        <symbol id="i-campana" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></symbol>
+        <symbol id="i-luz" viewBox="0 0 24 24"><path d="M13 2L5 14h6l-1 8 8-12h-6z"/></symbol>
+        <symbol id="i-agua" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+        <symbol id="i-telefono" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+        <symbol id="i-internet" viewBox="0 0 24 24"><path d="M3 9a14 14 0 0 1 18 0M6 12.5a9.5 9.5 0 0 1 12 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1"/></symbol>
+        <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+        <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+        <symbol id="i-rayo" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+        <symbol id="i-ojo" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+        <symbol id="i-billetes" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    </svg>
+    <a class="marca" th:href="${session.rol == 'ASESOR'} ? @{/asesor/solicitudes} : @{/cliente/dashboard}">
+        <span class="logo">F</span><span>Facil<b>Bank</b></span>
+    </a>
+    <nav class="menu" th:if="${session.rol == 'CLIENTE'}">
+        <a th:href="@{/cliente/dashboard}" th:classappend="${activo == 'cuentas'} ? 'activo'"><svg class="ico"><use href="#i-cuentas"/></svg><span>Mis cuentas</span></a>
+        <a th:href="@{/cliente/movimientos}" th:classappend="${activo == 'movimientos'} ? 'activo'"><svg class="ico"><use href="#i-movimientos"/></svg><span>Movimientos</span></a>
+        <a th:href="@{/cliente/transferencia}" th:classappend="${activo == 'transferir'} ? 'activo'"><svg class="ico"><use href="#i-transferir"/></svg><span>Transferir</span></a>
+        <a th:href="@{/cliente/pagos}" th:classappend="${activo == 'pagos'} ? 'activo'"><svg class="ico"><use href="#i-pagos"/></svg><span>Pagar servicios</span></a>
+        <a th:href="@{/cliente/credito}" th:classappend="${activo == 'credito'} ? 'activo'"><svg class="ico"><use href="#i-credito"/></svg><span>Pedir un crédito</span></a>
+    </nav>
+    <nav class="menu" th:if="${session.rol == 'ASESOR'}">
+        <a th:href="@{/asesor/solicitudes}" th:classappend="${activo == 'pendientes'} ? 'activo'"><svg class="ico"><use href="#i-pendientes"/></svg><span>Solicitudes pendientes</span></a>
+        <a th:href="@{/asesor/resueltas}" th:classappend="${activo == 'resueltas'} ? 'activo'"><svg class="ico"><use href="#i-resueltas"/></svg><span>Solicitudes resueltas</span></a>
     </nav>
     <div class="usuario">
-        <span class="nombre" th:text="${session.usuario}">Cliente</span>
+        <div class="usuario-datos">
+            <span class="avatar" th:text="${#strings.substring(session.usuario, 0, 1)}">A</span>
+            <div>
+                <span class="nombre" th:text="${session.usuario}">Usuario</span>
+                <span class="rol" th:text="${session.rol == 'ASESOR'} ? 'Asesor de crédito' : 'Cliente'">Cliente</span>
+            </div>
+        </div>
         <form th:action="@{/logout}" method="post">
-            <button class="btn-salir" type="submit">Cerrar sesión</button>
+            <button class="btn-salir" type="submit"><svg class="ico"><use href="#i-salir"/></svg>Cerrar sesión</button>
         </form>
     </div>
 </aside>
@@ -30,5 +68,19 @@
     <div class="aviso ok" th:if="${ok}" th:text="${ok}"></div>
     <div class="aviso error" th:if="${error}" th:text="${error}"></div>
 </div>
+<span th:fragment="estado(valor)" class="estado" th:classappend="'estado-' + ${valor}"
+      th:text="${valor == 'SOLICITADO'} ? 'Solicitado' : (${valor == 'EN_EVALUACION'} ? 'En evaluación' : (${valor == 'APROBADO'} ? 'Aprobado' : 'Rechazado'))">Solicitado</span>
+<span th:fragment="operacion(valor)"
+      th:text="${valor == 'DEPOSITO'} ? 'Depósito' : (${valor == 'RETIRO'} ? 'Retiro' : (${valor == 'TRANSFERENCIA'} ? 'Transferencia' : 'Pago de servicio'))">Depósito</span>
+<dialog th:fragment="dialogo" id="dialogo">
+    <div class="dialogo-cuerpo">
+        <h2>Confirma la operación</h2>
+        <p data-texto></p>
+    </div>
+    <div class="dialogo-pie">
+        <button class="boton secundario" type="button" data-cancelar>Cancelar</button>
+        <button class="boton" type="button" data-aceptar>Confirmar</button>
+    </div>
+</dialog>
 </body>
 </html>

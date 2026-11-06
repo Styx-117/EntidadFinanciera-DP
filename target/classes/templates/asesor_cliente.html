@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Historial del cliente')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('pendientes')}"></aside>
+    <main class="contenido">
+        <a class="volver" th:href="@{/asesor/solicitudes}"><svg class="ico"><use href="#i-flecha"/></svg>Volver a las solicitudes</a>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <section class="cabecera-cliente">
+            <span class="avatar-grande" th:text="${#strings.substring(historial.cliente.nombres, 0, 1)}">A</span>
+            <div>
+                <h1 th:text="${historial.cliente.nombreCompleto}">Cliente</h1>
+                <p class="subtitulo" th:text="'DNI ' + ${historial.cliente.dni} + ' · ' + ${historial.cliente.email}">Datos</p>
+            </div>
+        </section>
+
+        <section class="tiles">
+            <div class="tile">
+                <span class="tile-ico"><svg class="ico"><use href="#i-billetes"/></svg></span>
+                <div><span class="tile-etiqueta">Saldo total</span><span class="tile-valor" th:text="'S/ ' + ${#numbers.formatDecimal(historial.saldoTotal, 1, 'COMMA', 2, 'POINT')}">S/ 0.00</span></div>
+            </div>
+            <div class="tile">
+                <span class="tile-ico oro"><svg class="ico"><use href="#i-cuentas"/></svg></span>
+                <div><span class="tile-etiqueta">Cuentas</span><span class="tile-valor" th:text="${#lists.size(historial.cuentas)}">0</span></div>
+            </div>
+            <div class="tile">
+                <span class="tile-ico azul"><svg class="ico"><use href="#i-credito"/></svg></span>
+                <div><span class="tile-etiqueta">Créditos registrados</span><span class="tile-valor" th:text="${#lists.size(historial.creditos)}">0</span></div>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <h2>Cuentas</h2>
+            <div class="tabla-caja">
+                <table class="tabla">
+                    <thead><tr><th>Número</th><th>Tipo</th><th>Estado</th><th class="num">Saldo (S/)</th></tr></thead>
+                    <tbody>
+                    <tr th:each="c : ${historial.cuentas}">
+                        <td th:text="${c.numeroCuenta}">001</td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(c.tipo))}">Ahorro</td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(c.estado))}">Activa</td>
+                        <td class="num" th:text="${#numbers.formatDecimal(c.saldo, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(historial.cuentas)}"><td colspan="4" class="vacio">Sin cuentas registradas.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <h2>Últimos movimientos</h2>
+            <div class="tabla-caja">
+                <table class="tabla">
+                    <thead><tr><th>Fecha</th><th>Operación</th><th>Cuenta</th><th class="num">Monto (S/)</th></tr></thead>
+                    <tbody>
+                    <tr th:each="m : ${historial.movimientos}">
+                        <td th:text="${#temporals.format(m.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
+                        <td>
+                            <div class="mov">
+                                <span class="mov-ico" th:classappend="${m.ingreso} ? 'ingreso' : 'egreso'"><svg class="ico"><use th:href="${m.ingreso} ? '#i-ingreso' : '#i-egreso'"/></svg></span>
+                                <div>
+                                    <strong><span th:replace="~{fragments :: operacion(${m.tipo})}"></span></strong>
+                                    <span class="secundario-texto" th:text="${m.descripcion}">Detalle</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td th:text="${m.numeroCuenta}">001</td>
+                        <td class="num">
+                            <span th:if="${m.ingreso}" class="monto-ingreso"
+                                  th:text="'+ ' + ${#numbers.formatDecimal(m.monto, 1, 'COMMA', 2, 'POINT')}">+ 0.00</span>
+                            <span th:unless="${m.ingreso}" class="monto-egreso"
+                                  th:text="'− ' + ${#numbers.formatDecimal(m.monto, 1, 'COMMA', 2, 'POINT')}">− 0.00</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(historial.movimientos)}"><td colspan="4" class="vacio">Sin movimientos.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <h2>Créditos</h2>
+            <div class="tabla-caja">
+                <table class="tabla">
+                    <thead><tr><th>Solicitud</th><th class="num">Monto (S/)</th><th>Plazo</th><th class="num">Cuota aprox.</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    <tr th:each="c : ${historial.creditos}">
+                        <td th:text="${#temporals.format(c.fechaSolicitud, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td class="num" th:text="${#numbers.formatDecimal(c.monto, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                        <td th:text="${c.plazoMeses + ' meses'}">12 meses</td>
+                        <td class="num" th:text="${#numbers.formatDecimal(c.cuotaMensual(), 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                        <td><span th:replace="~{fragments :: estado(${c.estado})}"></span></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(historial.creditos)}"><td colspan="5" class="vacio">Sin créditos previos.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

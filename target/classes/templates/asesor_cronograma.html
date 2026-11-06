@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Cronograma de pagos')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('resueltas')}"></aside>
+    <main class="contenido">
+        <a class="volver" th:href="@{/asesor/resueltas}"><svg class="ico"><use href="#i-flecha"/></svg>Volver a las solicitudes resueltas</a>
+        <header class="encabezado">
+            <div>
+                <h1>Cronograma de pagos</h1>
+                <p class="subtitulo" th:text="${credito.clienteNombre} + ' · crédito n.º ' + ${credito.idCredito}">Cliente</p>
+            </div>
+        </header>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <section class="tiles">
+            <div class="tile">
+                <span class="tile-ico"><svg class="ico"><use href="#i-billetes"/></svg></span>
+                <div><span class="tile-etiqueta">Monto aprobado</span><span class="tile-valor" th:text="'S/ ' + ${#numbers.formatDecimal(credito.monto, 1, 'COMMA', 2, 'POINT')}">S/ 0.00</span></div>
+            </div>
+            <div class="tile">
+                <span class="tile-ico oro"><svg class="ico"><use href="#i-calendario"/></svg></span>
+                <div><span class="tile-etiqueta">Cuota mensual</span><span class="tile-valor" th:text="'S/ ' + ${#numbers.formatDecimal(credito.cuotaMensual(), 1, 'COMMA', 2, 'POINT')}">S/ 0.00</span></div>
+            </div>
+            <div class="tile">
+                <span class="tile-ico azul"><svg class="ico"><use href="#i-credito"/></svg></span>
+                <div><span class="tile-etiqueta">Plazo · tasa anual</span><span class="tile-valor" th:text="${credito.plazoMeses + ' m · ' + credito.tasaAnual + '%'}">12 m · 18%</span></div>
+            </div>
+        </section>
+
+        <div class="tabla-caja">
+            <table class="tabla">
+                <thead>
+                <tr><th>N.º</th><th>Vencimiento</th><th class="num">Cuota (S/)</th><th class="num">Interés (S/)</th><th class="num">Capital (S/)</th><th class="num">Saldo (S/)</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="q : ${cuotas}">
+                    <td th:text="${q.numero}">1</td>
+                    <td th:text="${#temporals.format(q.vencimiento, 'dd/MM/yyyy')}">01/01/2026</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(q.cuota, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(q.interes, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(q.capital, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(q.saldo, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Evaluar solicitud')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('pendientes')}"></aside>
+    <main class="contenido">
+        <a class="volver" th:href="@{/asesor/solicitudes}"><svg class="ico"><use href="#i-flecha"/></svg>Volver a las solicitudes</a>
+        <header class="encabezado">
+            <div>
+                <h1 th:text="'Solicitud n.º ' + ${credito.idCredito}">Solicitud</h1>
+                <p class="subtitulo" th:text="${credito.clienteNombre} + ' · DNI ' + ${credito.clienteDni}">Cliente</p>
+            </div>
+            <div class="acciones">
+                <span th:replace="~{fragments :: estado(${credito.estado})}"></span>
+                <a class="boton secundario chico" th:href="@{/asesor/cliente/{id}(id=${credito.idCliente})}"><svg class="ico"><use href="#i-usuario"/></svg>Historial del cliente</a>
+            </div>
+        </header>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <ol class="pasos">
+            <li class="paso" th:classappend="${credito.estado == 'SOLICITADO'} ? 'actual' : 'hecho'">Solicitado</li>
+            <li class="paso" th:classappend="${credito.estado == 'EN_EVALUACION'} ? 'actual' : (${credito.estado == 'SOLICITADO'} ? '' : 'hecho')">En evaluación</li>
+            <li class="paso" th:classappend="${credito.estado == 'APROBADO'} ? 'hecho' : (${credito.estado == 'RECHAZADO'} ? 'hecho rechazado' : '')"
+                th:text="${credito.estado == 'RECHAZADO'} ? 'Rechazado' : 'Aprobado'">Aprobado</li>
+        </ol>
+
+        <section class="panel">
+            <dl class="ficha">
+                <div><dt>Monto solicitado</dt><dd class="grande" th:text="'S/ ' + ${#numbers.formatDecimal(credito.monto, 1, 'COMMA', 2, 'POINT')}">S/ 0.00</dd></div>
+                <div><dt>Plazo</dt><dd th:text="${credito.plazoMeses + ' meses'}">12 meses</dd></div>
+                <div><dt>Tasa anual</dt><dd th:text="${credito.tasaAnual + '%'}">18%</dd></div>
+                <div><dt>Cuota aproximada</dt><dd th:text="'S/ ' + ${#numbers.formatDecimal(credito.cuotaMensual(), 1, 'COMMA', 2, 'POINT')}">S/ 0.00</dd></div>
+                <div><dt>Fecha de solicitud</dt><dd th:text="${#temporals.format(credito.fechaSolicitud, 'dd/MM/yyyy HH:mm')}">01/01/2026</dd></div>
+            </dl>
+        </section>
+
+        <section class="seccion" th:if="${credito.estado == 'SOLICITADO'}">
+            <form class="panel" style="max-width:640px" method="post">
+                <h2>Iniciar evaluación</h2>
+                <p class="subtitulo" style="margin-bottom:18px">Al iniciar, el cliente recibe un aviso de que su solicitud está en evaluación.</p>
+                <div class="campo">
+                    <label for="observaciones">Observaciones iniciales (opcional)</label>
+                    <textarea id="observaciones" name="observaciones" th:text="${credito.observaciones}"></textarea>
+                </div>
+                <button class="boton" type="submit"
+                        th:formaction="@{/asesor/solicitud/{id}/evaluar(id=${credito.idCredito})}">Iniciar evaluación</button>
+            </form>
+        </section>
+
+        <section class="seccion" th:if="${credito.estado == 'EN_EVALUACION'}">
+            <form class="panel" style="max-width:640px" method="post">
+                <h2>Resultado de la evaluación</h2>
+                <div class="campo">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea id="observaciones" name="observaciones" th:text="${credito.observaciones}"></textarea>
+                    <div class="ayuda">Son obligatorias para rechazar. El cliente verá el motivo.</div>
+                </div>
+                <div class="acciones">
+                    <button class="boton secundario" type="submit"
+                            th:formaction="@{/asesor/solicitud/{id}/observaciones(id=${credito.idCredito})}">Guardar observaciones</button>
+                    <button class="boton exito" type="submit"
+                            th:formaction="@{/asesor/solicitud/{id}/aprobar(id=${credito.idCredito})}">Aprobar</button>
+                    <button class="boton peligro" type="submit"
+                            th:formaction="@{/asesor/solicitud/{id}/rechazar(id=${credito.idCredito})}">Rechazar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="seccion" th:if="${credito.estado == 'APROBADO' or credito.estado == 'RECHAZADO'}">
+            <div class="panel" style="max-width:640px">
+                <h2>Resolución</h2>
+                <p th:text="${credito.observaciones != null} ? ${credito.observaciones} : 'Sin observaciones registradas.'">Observaciones</p>
+                <p class="ayuda" th:if="${credito.fechaEvaluacion != null}"
+                   th:text="'Resuelta el ' + ${#temporals.format(credito.fechaEvaluacion, 'dd/MM/yyyy HH:mm')}">Fecha</p>
+                <a class="boton" th:if="${credito.estado == 'APROBADO'}"
+                   th:href="@{/asesor/credito/{id}/cronograma(id=${credito.idCredito})}"><svg class="ico"><use href="#i-calendario"/></svg>Ver cronograma de pagos</a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

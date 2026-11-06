@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Solicitudes resueltas')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: lateral('resueltas')}"></aside>
+    <main class="contenido">
+        <header class="encabezado">
+            <div>
+                <h1>Solicitudes resueltas</h1>
+                <p class="subtitulo">Créditos aprobados y rechazados. Abre el cronograma de los aprobados.</p>
+            </div>
+        </header>
+        <div th:replace="~{fragments :: mensajes}"></div>
+
+        <section class="tiles">
+            <div class="tile">
+                <span class="tile-ico"><svg class="ico"><use href="#i-resueltas"/></svg></span>
+                <div><span class="tile-etiqueta">Aprobadas</span><span class="tile-valor" th:text="${#lists.size(solicitudes.?[estado == 'APROBADO'])}">0</span></div>
+            </div>
+            <div class="tile">
+                <span class="tile-ico oro"><svg class="ico"><use href="#i-escudo"/></svg></span>
+                <div><span class="tile-etiqueta">Rechazadas</span><span class="tile-valor" th:text="${#lists.size(solicitudes.?[estado == 'RECHAZADO'])}">0</span></div>
+            </div>
+        </section>
+
+        <div class="tabla-caja">
+            <table class="tabla">
+                <thead>
+                <tr><th>Resuelta</th><th>Cliente</th><th class="num">Monto (S/)</th><th>Plazo</th><th>Estado</th><th></th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${solicitudes}">
+                    <td th:text="${c.fechaEvaluacion != null} ? ${#temporals.format(c.fechaEvaluacion, 'dd/MM/yyyy')} : '-'">01/01/2026</td>
+                    <td>
+                        <strong th:text="${c.clienteNombre}">Cliente</strong>
+                        <span class="secundario-texto" th:text="'DNI ' + ${c.clienteDni}">DNI</span>
+                    </td>
+                    <td class="num" th:text="${#numbers.formatDecimal(c.monto, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                    <td th:text="${c.plazoMeses + ' meses'}">12 meses</td>
+                    <td><span th:replace="~{fragments :: estado(${c.estado})}"></span></td>
+                    <td>
+                        <div class="acciones">
+                            <a class="boton secundario chico" th:href="@{/asesor/cliente/{id}(id=${c.idCliente})}"><svg class="ico"><use href="#i-usuario"/></svg>Historial</a>
+                            <a class="boton chico" th:if="${c.estado == 'APROBADO'}"
+                               th:href="@{/asesor/credito/{id}/cronograma(id=${c.idCredito})}"><svg class="ico"><use href="#i-calendario"/></svg>Cronograma</a>
+                            <a class="boton secundario chico" th:unless="${c.estado == 'APROBADO'}"
+                               th:href="@{/asesor/solicitud/{id}(id=${c.idCredito})}">Ver detalle</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(solicitudes)}">
+                    <td colspan="6" class="vacio">Todavía no has resuelto ninguna solicitud.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
